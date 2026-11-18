@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User API Assignment</title>
+</head>
+
+<body>
+
+    <h1>User Management System</h1>
+
+    <p>Fetch API using JavaScript</p>
+
+    <h2>Total Users: <span id="totalUsers">0</span></h2>
+
+    <input type="text" id="search" placeholder="Search user">
+
+    <button onclick="getUsers()">Load API Users</button>
+
+    <button onclick="loadFakeUsers()">Load Demo Data</button>
+
+    <p id="message">Click Load API Users</p>
+
+    <table border="1" cellpadding="10">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Website</th>
+            </tr>
+        </thead>
+
+        <tbody id="userTable"></tbody>
+
+    </table>
+
+
+    <script>
+
+        const apiURL = "https://jsonplaceholder.typicode.com/users";
+
+        let allUsers = [];
+
+
+        // Fetch API
+        async function getUsers() {
+
+            document.getElementById("message").innerText = "Loading...";
+
+            try {
+
+                const response = await fetch(apiURL);
+
+                const data = await response.json();
+
+                allUsers = data;
+
+                displayUsers(allUsers);
+
+                document.getElementById("message").innerText = "API Data Loaded Successfully";
+
+            }
+
+            catch (error) {
+
+                document.getElementById("message").innerText = "Error Loading API";
+
+                console.log(error);
+
+            }
+
+        }
+
+
+        // Display Users
+        function displayUsers(users) {
+
+            let table = document.getElementById("userTable");
+
+            table.innerHTML = "";
+
+            document.getElementById("totalUsers").innerText = users.length;
+
+            for (let i = 0; i < users.length; i++) {
+
+                table.innerHTML += `
+                    <tr>
+                        <td>${users[i].id}</td>
+                        <td>${users[i].name}</td>
+                        <td>${users[i].username}</td>
+                        <td>${users[i].email}</td>
+                        <td>${users[i].phone}</td>
+                        <td>${users[i].website}</td>
+                    </tr>
+                `;
+
+            }
+
+        }
+
+
+        // Search Users
+        document.getElementById("search").addEventListener("input", function () {
+
+            let searchValue = this.value.toLowerCase();
+
+            let filteredUsers = allUsers.filter(function (user) {
+
+                return user.name.toLowerCase().includes(searchValue);
+
+            });
+
+            displayUsers(filteredUsers);
+
+        });
+
+
+        // Fake Demo Data
+        function loadFakeUsers() {
+
+            allUsers = [
+
+                {
+                    id: 1,
+                    name: "Ali Khan",
+                    username: "ali123",
+                    email: "ali@gmail.com",
+                    phone: "03001234567",
+                    website: "ali.com"
+                },
+
+                {
+                    id: 2,
+                    name: "Ahmed",
+                    username: "ahmed123",
+                    email: "ahmed@gmail.com",
+                    phone: "03007654321",
+                    website: "ahmed.com"
+                },
+
+                {
+                    id: 3,
+                    name: "Usman",
+                    username: "usman123",
+                    email: "usman@gmail.com",
+                    phone: "03111234567",
+                    website: "usman.com"
+                }
+
+            ];
+
+            displayUsers(allUsers);
+
+            document.getElementById("message").innerText = "Demo Data Loaded";
+
+        }
+
+    </script>
+
+</body>
+
+</html>
